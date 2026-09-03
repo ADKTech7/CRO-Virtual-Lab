@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Virtual Lab – CRO Measurement</title>
+<style>
+*{box-sizing:border-box} body{margin:0;font-family:Arial,sans-serif;background:#eef2f7;color:#172033}
+header{background:#123b63;color:#fff;padding:18px 24px} header h1{margin:0;font-size:25px} header p{margin:5px 0 0;opacity:.9}
+nav{display:flex;flex-wrap:wrap;background:#fff;border-bottom:1px solid #ccd5df}
+nav button{border:0;background:#fff;padding:13px 18px;cursor:pointer;font-weight:bold;color:#24415e}
+nav button.active{background:#dcecff;color:#0b4f8a;border-bottom:3px solid #0b70c9}
+main{max-width:1200px;margin:auto;padding:20px}.tab{display:none}.tab.active{display:block}
+.card{background:#fff;border-radius:12px;padding:20px;margin-bottom:18px;box-shadow:0 2px 10px #00000012}
+h2{color:#123b63;margin-top:0}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:18px}
+label{display:block;margin:12px 0 5px;font-weight:bold} input,select{width:100%;padding:9px;border:1px solid #bbc7d3;border-radius:6px}
+button.action{padding:10px 16px;border:0;border-radius:7px;background:#1769aa;color:white;cursor:pointer;margin:8px 5px 0 0}
+button.stop{background:#a83232} button.reset{background:#555}
+.instrument{background:#111827;color:#d9f0ff;border-radius:12px;padding:16px}
+.scope{background:#071a14;border:5px solid #263b36;border-radius:8px;padding:8px}
+canvas{display:block;width:100%;background:#06130f;border-radius:4px}
+.readings{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+.reading{background:#0b241c;border-radius:7px;padding:12px;text-align:center}.reading b{display:block;font-size:22px;color:#7dff9d}
+table{width:100%;border-collapse:collapse;margin-top:10px}th,td{border:1px solid #cbd5df;padding:9px;text-align:center}th{background:#e9f1f8}
+.quiz-q{padding:12px 0;border-bottom:1px solid #ddd}.result{font-weight:bold;margin-top:12px}
+@media(max-width:600px){header h1{font-size:20px}.readings{grid-template-columns:1fr}.card{padding:14px}}
+</style>
+</head>
+<body>
+<header>
+<h1>Virtual Lab – CRO Measurement of Amplitude, Frequency and Phase</h1>
+<p>Electronics Engineering • Interactive Oscilloscope Experiment</p>
+</header>
+
+<nav>
+<button class="tabbtn active" onclick="showTab('aim',this)">Aim & Theory</button>
+<button class="tabbtn" onclick="showTab('procedure',this)">Procedure</button>
+<button class="tabbtn" onclick="showTab('simulation',this)">Simulation</button>
+<button class="tabbtn" onclick="showTab('observation',this)">Observation</button>
+<button class="tabbtn" onclick="showTab('quiz',this)">Quiz</button>
+</nav>
+
+<main>
+<section id="aim" class="tab active">
+<div class="card">
+<h2>Aim</h2>
+<p>To measure the amplitude, frequency and phase difference of sinusoidal signals using a virtual Cathode Ray Oscilloscope (CRO).</p>
+<h2>Theory</h2>
+<p><b>Amplitude:</b> The peak value of a sinusoidal voltage is measured from the zero reference to the maximum vertical deflection.</p>
+<p><b>Frequency:</b> Frequency is calculated from the time period: <b>f = 1/T</b>.</p>
+<p><b>Phase difference:</b> For two sinusoidal signals, phase difference is related to the horizontal time displacement: <b>φ = (Δt/T) × 360°</b>.</p>
+</div>
+<div class="card">
+<h2>Apparatus</h2>
+<ul><li>Virtual CRO / Oscilloscope</li><li>Two-channel sinusoidal signal source</li><li>Connecting leads</li><li>Time/div and Volt/div controls</li></ul>
+</div>
+</section>
+
+<section id="procedure" class="tab">
+<div class="card">
+<h2>Procedure</h2>
+<ol>
+<li>Set the amplitude and frequency of Channel 1.</li>
+<li>Set the amplitude, frequency and phase shift of Channel 2.</li>
+<li>Start the virtual CRO.</li>
+<li>Observe the waveforms on the oscilloscope screen.</li>
+<li>Use the displayed measurements to determine amplitude and frequency.</li>
+<li>For phase measurement, observe the time displacement between corresponding points of the two signals.</li>
+<li>Record the readings in the observation table.</li>
+</ol>
+</div>
+</section>
+
+<section id="simulation" class="tab">
+<div class="grid">
+<div class="card">
+<h2>Signal Generator</h2>
+<label>CH1 Peak Amplitude (V)</label>
+<input id="amp1" type="number" value="2" min="0.1" max="10" step="0.1" oninput="draw()">
+<label>Frequency (Hz)</label>
+<input id="freq" type="number" value="1000" min="10" max="10000" step="10" oninput="draw()">
+<label>CH2 Peak Amplitude (V)</label>
+<input id="amp2" type="number" value="2" min="0.1" max="10" step="0.1" oninput="draw()">
+<label>Phase Difference (degrees)</label>
+<input id="phase" type="number" value="45" min="-180" max="180" step="1" oninput="draw()">
+<button class="action" onclick="startScope()">START</button>
+<button class="action stop" onclick="stopScope()">STOP</button>
+<button class="action reset" onclick="resetLab()">RESET</button>
+</div>
+
+<div class="card instrument">
+<h2 style="color:#d9f0ff">Virtual CRO</h2>
+<div class="scope"><canvas id="scope" width="900" height="430"></canvas></div>
+<div class="readings">
+<div class="reading">CH1 V<sub>p</sub><b id="ramp1">2.00 V</b></div>
+<div class="reading">Frequency<b id="rf">1000 Hz</b></div>
+<div class="reading">Phase<b id="rphase">45°</b></div>
+</div>
+</div>
+</div>
+<div class="card">
+<h2>Measurement Formulae</h2>
+<p>Peak-to-peak voltage: <b>V<sub>pp</sub> = 2V<sub>p</sub></b></p>
+<p>Frequency: <b>f = 1/T</b></p>
+<p>Phase: <b>φ = (Δt/T) × 360°</b></p>
+</div>
+</section>
+
+<section id="observation" class="tab">
+<div class="card">
+<h2>Observation Table</h2>
+<table id="obs">
+<thead><tr><th>Trial</th><th>Amplitude (V)</th><th>Frequency (Hz)</th><th>Phase (°)</th><th>Result</th></tr></thead>
+<tbody></tbody>
+</table>
+<button class="action" onclick="addObservation()">ADD CURRENT READING</button>
+<button class="action reset" onclick="clearObservation()">CLEAR</button>
+</div>
+</section>
+
+<section id="quiz" class="tab">
+<div class="card">
+<h2>Quiz</h2>
+<div class="quiz-q"><b>1. What is the relation between frequency and time period?</b><br>
+<label><input type="radio" name="q1" value="1"> f = 1/T</label>
+<label><input type="radio" name="q1" value="0"> f = T</label></div>
+<div class="quiz-q"><b>2. A 2 V peak sine wave has what peak-to-peak voltage?</b><br>
+<label><input type="radio" name="q2" value="1"> 4 V</label>
+<label><input type="radio" name="q2" value="0"> 2 V</label></div>
+<div class="quiz-q"><b>3. If Δt/T = 0.25, the phase difference is:</b><br>
+<label><input type="radio" name="q3" value="0"> 45°</label>
+<label><input type="radio" name="q3" value="1"> 90°</label></div>
+<div class="quiz-q"><b>4. Which CRO control determines vertical sensitivity?</b><br>
+<label><input type="radio" name="q4" value="1"> Volt/div</label>
+<label><input type="radio" name="q4" value="0"> Time/div</label></div>
+<button class="action" onclick="checkQuiz()">SUBMIT QUIZ</button>
+<div id="quizResult" class="result"></div>
+</div>
+</section>
+</main>
+
+<script>
+let running=true, timer=null, t=0, trial=0;
+const c=document.getElementById("scope"), ctx=c.getContext("2d");
+
+function showTab(id,btn){
+ document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));
+ document.querySelectorAll(".tabbtn").forEach(x=>x.classList.remove("active"));
+ document.getElementById(id).classList.add("active"); btn.classList.add("active");
+ if(id==="simulation") draw();
+}
+function val(id){return parseFloat(document.getElementById(id).value)||0}
+function draw(){
+ const A1=val("amp1"), A2=val("amp2"), f=val("freq"), ph=val("phase");
+ document.getElementById("ramp1").textContent=A1.toFixed(2)+" V";
+ document.getElementById("rf").textContent=f.toFixed(0)+" Hz";
+ document.getElementById("rphase").textContent=ph.toFixed(0)+"°";
+ ctx.clearRect(0,0,c.width,c.height);
+ ctx.strokeStyle="#174f3c";ctx.lineWidth=1;
+ for(let x=0;x<c.width;x+=45){ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,c.height);ctx.stroke()}
+ for(let y=0;y<c.height;y+=43){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(c.width,y);ctx.stroke()}
+ ctx.strokeStyle="#58b87a";ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(0,c.height/2);ctx.lineTo(c.width,c.height/2);ctx.stroke();
+ const scale=38, cycles=3, shift=ph*Math.PI/180;
+ function wave(A,phase,yoff,dash){
+   ctx.strokeStyle=dash?"#f0c85a":"#55e6ff";ctx.lineWidth=2;ctx.setLineDash(dash?[8,6]:[]);
+   ctx.beginPath();
+   for(let x=0;x<c.width;x++){
+     const y=yoff-A*scale*Math.sin(2*Math.PI*cycles*x/c.width+phase);
+     if(x===0)ctx.moveTo(x,y);else ctx.lineTo(x,y);
+   }ctx.stroke();ctx.setLineDash([]);
+ }
+ wave(A1,0,c.height*.35,false);
+ wave(A2,shift,c.height*.65,true);
+ ctx.fillStyle="#55e6ff";ctx.fillText("CH1",15,22);
+ ctx.fillStyle="#f0c85a";ctx.fillText("CH2",65,22);
+}
+function startScope(){running=true;if(!timer) timer=setInterval(()=>{if(running){t+=.03;draw()}},30)}
+function stopScope(){running=false}
+function resetLab(){document.getElementById("amp1").value=2;document.getElementById("amp2").value=2;document.getElementById("freq").value=1000;document.getElementById("phase").value=45;running=true;draw()}
+function addObservation(){
+ trial++;
+ const tr=document.querySelector("#obs tbody").insertRow();
+ [trial,val("amp1").toFixed(2),val("freq").toFixed(0),val("phase").toFixed(0),"Measured successfully"].forEach(x=>{const td=tr.insertCell();td.textContent=x});
+}
+function clearObservation(){document.querySelector("#obs tbody").innerHTML="";trial=0}
+function checkQuiz(){
+ let score=0; for(let i=1;i<=4;i++){const a=document.querySelector('input[name="q'+i+'"]:checked');if(a)score+=Number(a.value)}
+ document.getElementById("quizResult").textContent="Score: "+score+"/4";
+}
+draw();startScope();
+</script>
+</body>
+</html>

@@ -3,92 +3,101 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Virtual Lab - Advanced CRO</title>
+<title>Virtual Lab - CRO Measurement</title>
 <style>
-*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:#e9eef3;color:#18232d}
-header{background:linear-gradient(#174b78,#0b3151);color:#fff;padding:18px 22px}header h1{margin:0;font-size:24px}header p{margin:5px 0}
-nav{display:flex;flex-wrap:wrap;background:#fff;border-bottom:1px solid #ccd5df;position:sticky;top:0;z-index:5}
-nav button{padding:12px 15px;border:0;background:#fff;font-weight:bold;color:#23445f;cursor:pointer}nav button.active{background:#dbeeff;color:#075b99;border-bottom:3px solid #0876c9}
-main{max-width:1320px;margin:auto;padding:18px}.tab{display:none}.tab.active{display:block}.card{background:#fff;padding:18px;border-radius:12px;box-shadow:0 2px 9px #0001;margin-bottom:16px}.grid{display:grid;grid-template-columns:310px 1fr;gap:18px}
-h2{color:#123b63}.control{background:#26333d;color:#eef6fb;padding:13px;border-radius:10px;margin-bottom:11px}.control h3{margin:0 0 8px;font-size:15px}.control label{display:flex;justify-content:space-between;margin:7px 0 3px;font-size:12px}.control input[type=range]{width:100%}.control select{width:100%;padding:7px}
-.btn{padding:8px 12px;border:0;border-radius:6px;background:#0873b9;color:#fff;font-weight:bold;cursor:pointer;margin:3px}.stop{background:#a33}.reset{background:#555}.mode{background:#7451a0}.on{background:#18834a}
-.cro{background:linear-gradient(145deg,#34434e,#1e2931);padding:19px;border-radius:18px;box-shadow:0 7px 15px #0004;color:#e4edf2}.brand{font-weight:bold;letter-spacing:2px;margin-bottom:9px}.led{display:inline-block;width:9px;height:9px;border-radius:50%;background:#4cff6c;box-shadow:0 0 8px #4cff6c}
-.screenbox{background:#10181b;border-radius:8px;padding:9px;border:3px solid #4d5d65}.screen{width:100%;display:block;background:#06140f}
-.front{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}.section{background:#26343d;padding:12px;border-radius:8px}.knobs{display:flex;justify-content:space-around;flex-wrap:wrap;gap:10px;margin-top:10px}.kw{text-align:center;font-size:10px}.knob{width:62px;height:62px;border-radius:50%;background:radial-gradient(circle at 35% 28%,#7c8a91,#1b262d 60%,#080d10);border:4px solid #10191e;position:relative;cursor:pointer;box-shadow:0 3px 7px #0009}.knob:after{content:"";position:absolute;width:3px;height:19px;background:#eee;left:27px;top:7px;transform-origin:50% 24px;transform:rotate(var(--rot,0deg));border-radius:2px;transition:.1s}
-.display{background:#07130f;color:#66ff9a;font-family:monospace;padding:9px;text-align:center;border-radius:4px;margin-top:9px}.measure{display:grid;grid-template-columns:repeat(5,1fr);gap:7px;margin-top:10px}.m{background:#111c20;padding:8px;text-align:center;border-radius:5px;font-size:10px}.m b{display:block;font-size:16px;color:#66ff9a;margin-top:3px}
-.probes{display:flex;gap:10px;margin-top:10px;flex-wrap:wrap}.probe{background:#202b32;padding:8px 12px;border-radius:6px}.wire{display:inline-block;width:55px;height:5px;border-radius:4px;background:#e34b4b;vertical-align:middle;margin-right:6px}.wire.b{background:#4b87e8}
-.formula{background:#f3f7fa;padding:12px;border-left:4px solid #1670a8}.warning{background:#fff6d9;border-left:4px solid #d79a00;padding:10px}
-table{border-collapse:collapse;width:100%}th,td{border:1px solid #cbd5df;padding:8px;text-align:center}th{background:#e8f0f7}.quiz{padding:10px 0;border-bottom:1px solid #ddd}.result{font-weight:bold;margin-top:12px}
-.cursorbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px}.cursorbar input{width:90px;padding:6px}.cursorread{font-family:monospace;background:#07130f;color:#66ff9a;padding:7px;border-radius:4px}
-@media(max-width:900px){.grid{grid-template-columns:1fr}.measure{grid-template-columns:repeat(3,1fr)}}@media(max-width:550px){header h1{font-size:18px}.front{grid-template-columns:1fr}.measure{grid-template-columns:repeat(2,1fr)}}
+:root{--nav:#12355b;--accent:#f59e0b;--bg:#eef2f7}
+*{box-sizing:border-box}body{margin:0;font-family:Arial,sans-serif;background:var(--bg);color:#172033}
+header{background:var(--nav);color:#fff;padding:18px 24px}header h1{margin:0;font-size:24px}header p{margin:5px 0;color:#dbe8f5}
+nav{background:#0b2744;display:flex;flex-wrap:wrap;padding:0 12px}nav button{border:0;background:none;color:#fff;padding:12px 14px;cursor:pointer;font-weight:bold}nav button.active,nav button:hover{background:var(--accent);color:#111}
+main{max-width:1250px;margin:auto;padding:20px}.page{display:none}.page.active{display:block}.card{background:#fff;border-radius:10px;padding:18px;margin-bottom:18px;box-shadow:0 2px 9px #0001}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+h2{color:var(--nav);margin-top:0}.note{background:#fff8e6;border-left:5px solid var(--accent);padding:12px}.success{color:#16803c;font-weight:bold}.error{color:#c62828;font-weight:bold}
+li{margin:9px 0}.controls{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}.control{background:#f4f6f9;border:1px solid #d7dce5;padding:10px;border-radius:8px}.control label{display:block;font-size:13px;font-weight:bold;margin-bottom:5px}
+input,select{width:100%;padding:7px;border:1px solid #bcc5d1;border-radius:5px}button.action{background:var(--nav);color:#fff;border:0;border-radius:5px;padding:9px 13px;cursor:pointer}
+.cro{display:grid;grid-template-columns:1fr 310px;gap:15px}.scope{background:#111;padding:12px;border-radius:8px}.scope canvas{width:100%;background:#07100b;border:3px solid #333}.panel{background:#26313b;color:#fff;border-radius:8px;padding:13px}.panel h3{color:#ffd166}.knobs{display:grid;grid-template-columns:1fr 1fr;gap:10px}.knob{background:#172029;padding:10px;border-radius:7px;text-align:center}.dial{width:58px;height:58px;border-radius:50%;background:radial-gradient(circle,#777 0 18%,#303030 20% 100%);margin:auto}.probe{padding:12px;background:#f3f5f8;border:2px dashed #8993a3;border-radius:8px}
+table{width:100%;border-collapse:collapse}th,td{border:1px solid #ccd3dd;padding:8px;text-align:center}th{background:#edf1f6}.result{padding:14px;background:#eef8f0;border-radius:8px;margin-top:12px}
+@media(max-width:850px){.cro{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
-<header><h1>Virtual Lab - Advanced CRO Measurement</h1><p>Amplitude | Frequency | Phase Difference | Lissajous Analysis</p></header>
-<nav>
-<button class="tb active" onclick="show('exp',this)">Experiment</button>
-<button class="tb" onclick="show('croTab',this)">CRO</button>
-<button class="tb" onclick="show('xyTab',this)">Lissajous</button>
-<button class="tb" onclick="show('obsTab',this)">Observation</button>
-<button class="tb" onclick="show('assess',this)">Assessment</button>
-</nav>
+<header><h1>Virtual Lab - CRO Measurement of Amplitude, Frequency and Phase</h1><p>Electronics Engineering | Academic Virtual Experiment</p></header>
+<nav id="nav"></nav>
 <main>
-<section id="exp" class="tab active"><div class="card">
-<h2>Aim</h2><p>To operate a dual-channel CRO and measure amplitude, frequency and phase difference of sinusoidal signals.</p>
-<h2>Experiment Instructions</h2>
-<ol><li>Connect the CH1 and CH2 probes to the signal source.</li><li>Turn the required channel ON.</li><li>Set VOLTS/DIV and TIME/DIV.</li><li>Select AC, DC or GND coupling as required.</li><li>Set signal amplitude, frequency and phase.</li><li>Press RUN and observe the traces.</li><li>Use cursor readings for time and voltage measurements.</li><li>Switch to X-Y/Lissajous mode and compare the phase result.</li></ol>
-<h2>Learning Outcomes</h2><ul><li>Explain vertical and horizontal CRO controls.</li><li>Measure Vp and Vpp.</li><li>Calculate f from T.</li><li>Determine phase from Δt and Lissajous patterns.</li></ul>
-<div class="formula"><b>f = 1/T</b> &nbsp; | &nbsp; <b>Vpp = 2Vp</b> &nbsp; | &nbsp; <b>φ = (Δt/T) × 360°</b></div>
-</div></section>
+<section id="home" class="page active"><div class="card"><h2>Welcome to the Virtual Laboratory</h2>
+<p>This experiment simulates a dual-channel CRO. Operate the virtual instruments, observe waveform divisions, perform calculations, record observations and complete the assessment.</p>
+<div class="note"><b>Student task:</b> Perform the experiment instead of simply reading the reference values.</div></div>
+<div class="grid"><div class="card"><h3>Aim</h3><p>To measure amplitude, frequency and phase difference between two sinusoidal signals using a dual-channel CRO and Lissajous pattern.</p></div>
+<div class="card"><h3>Learning Objectives</h3><ul><li>Set VOLTS/DIV and TIME/DIV.</li><li>Read waveform divisions.</li><li>Calculate Vp, Vpp, period and frequency.</li><li>Measure phase using time difference.</li><li>Interpret Lissajous patterns.</li></ul></div></div></section>
 
-<section id="croTab" class="tab"><div class="grid">
-<aside>
-<div class="control"><h3>CHANNEL 1</h3><button id="ch1btn" class="btn on" onclick="toggleCh(1)">CH1 ON</button><label>VOLTS/DIV <span id="v1txt"></span></label><input id="v1" type="range" min=".5" max="5" step=".5" value="1"><label>Coupling</label><select id="c1"><option>DC</option><option>AC</option><option>GND</option></select></div>
-<div class="control"><h3>CHANNEL 2</h3><button id="ch2btn" class="btn on" onclick="toggleCh(2)">CH2 ON</button><label>VOLTS/DIV <span id="v2txt"></span></label><input id="v2" type="range" min=".5" max="5" step=".5" value="1"><label>Coupling</label><select id="c2"><option>DC</option><option>AC</option><option>GND</option></select></div>
-<div class="control"><h3>TIME BASE</h3><label>TIME/DIV <span id="ttxt"></span></label><input id="time" type="range" min=".05" max="1" step=".05" value=".2"><label>Trigger Level <span id="trtxt"></span></label><input id="trigger" type="range" min="-2" max="2" step=".1" value="0"></div>
-<div class="control"><h3>SIGNAL SOURCE</h3><label>CH1 Amplitude <span id="a1txt"></span></label><input id="a1" type="range" min=".5" max="5" step=".1" value="2"><label>CH2 Amplitude <span id="a2txt"></span></label><input id="a2" type="range" min=".5" max="5" step=".1" value="2"><label>Frequency <span id="ftxt"></span></label><input id="freq" type="range" min="200" max="5000" step="100" value="1000"><label>Phase CH2 <span id="ptxt"></span></label><input id="phase" type="range" min="-180" max="180" value="45"></div>
-<div class="control"><button class="btn" onclick="run=true">RUN</button><button class="btn stop" onclick="run=false">STOP</button><button class="btn reset" onclick="resetLab()">RESET</button><button class="btn mode" onclick="xy()">X-Y MODE</button></div>
-</aside>
-<div class="cro"><div class="brand"><span class="led"></span> VIRTUAL CRO | 20 MHz | DUAL CHANNEL</div>
-<div class="screenbox"><canvas id="scope" class="screen" width="1000" height="500"></canvas></div>
-<div class="measure"><div class="m">CH1 Vp<b id="mv1"></b></div><div class="m">CH1 Vpp<b id="mpp"></b></div><div class="m">Period<b id="mt"></b></div><div class="m">Frequency<b id="mf"></b></div><div class="m">Phase<b id="mp"></b></div></div>
-<div class="cursorbar"><b>CURSORS:</b><label>Cursor A (ms)<input id="ca" type="number" value="0"></label><label>Cursor B (ms)<input id="cb" type="number" value=".125"></label><span class="cursorread" id="cread">Δt = 0.125 ms | φ = 45°</span></div>
-<div class="front"><div class="section"><b>VERTICAL CONTROLS</b><div class="knobs"><div class="kw">CH1 VOLTS/DIV<div class="knob" id="k1"></div></div><div class="kw">CH2 VOLTS/DIV<div class="knob" id="k2"></div></div><div class="kw">POSITION<div class="knob"></div></div></div></div>
-<div class="section"><b>HORIZONTAL / TRIGGER</b><div class="knobs"><div class="kw">TIME/DIV<div class="knob" id="kt"></div></div><div class="kw">TRIGGER<div class="knob" id="ktr"></div></div><div class="kw">INTENSITY<div class="knob"></div></div></div></div></div>
-<div class="display">CH1 <span id="d1"></span> | CH2 <span id="d2"></span> | <span id="df"></span> | Δφ <span id="dp"></span></div>
-<div class="probes"><div class="probe"><span class="wire"></span>CH1 PROBE</div><div class="probe"><span class="wire b"></span>CH2 PROBE</div><div class="probe">GND ●</div></div>
-</div></div></section>
+<section id="theory" class="page"><div class="card"><h2>Theory</h2>
+<p><b>Vpp = vertical divisions × VOLTS/DIV</b></p><p><b>Vp = Vpp / 2</b></p><p><b>T = horizontal divisions × TIME/DIV</b></p><p><b>f = 1/T</b></p><p><b>Phase φ = (Δt/T) × 360°</b></p>
+<p>In X-Y mode, two equal-frequency sinusoidal signals produce a Lissajous figure. Its shape depends on phase and amplitude ratio.</p></div>
+<div class="grid"><div class="card"><h3>Prerequisites</h3><ul><li>AC waveform basics</li><li>Frequency and time period</li><li>Basic CRO controls</li><li>Phase difference</li></ul></div><div class="card"><h3>Apparatus</h3><ul><li>Dual-channel CRO</li><li>Function generator</li><li>CH1/CH2 probes</li><li>Connecting leads</li></ul></div></div></section>
 
-<section id="xyTab" class="tab"><div class="card"><h2>Lissajous / X-Y Phase Measurement</h2><p>CH1 is the X-axis and CH2 is the Y-axis. Equal frequencies are used for phase measurement.</p><div class="grid"><div class="control"><h3>X-Y CONTROLS</h3><label>Frequency <span id="xf"></span></label><input id="xfreq" type="range" min="200" max="5000" step="100" value="1000"><label>Phase <span id="xp"></span></label><input id="xphase" type="range" min="-180" max="180" value="45"><label>Amplitude Ratio CH2/CH1 <span id="xr"></span></label><input id="xratio" type="range" min=".5" max="1.5" step=".1" value="1"><div class="warning">For equal frequencies: 0°/180° gives a line; 90° gives a circle when amplitudes are equal.</div></div><div class="screenbox"><canvas id="xy" class="screen" width="800" height="520"></canvas></div></div></div></section>
+<section id="procedure" class="page"><div class="card"><h2>Procedure</h2><ol>
+<li>Open the Simulation and switch the CRO to RUN.</li><li>Connect CH1 to the generator.</li><li>Select DC coupling and suitable VOLTS/DIV.</li><li>Adjust TIME/DIV to display complete cycles.</li><li>Determine Vpp and frequency from divisions.</li><li>Connect CH2 and set the required phase.</li><li>Use the two waveforms/time relationship to determine phase.</li><li>Switch to X-Y/Lissajous mode and verify phase.</li><li>Enter measured values in Observation and submit.</li><li>Complete Assessment.</li></ol><button class="action" onclick="go('simulation')">Start Experiment →</button></div></section>
 
-<section id="obsTab" class="tab"><div class="card"><h2>Observation Table</h2><table><thead><tr><th>Trial</th><th>Vp CH1</th><th>Vpp</th><th>Frequency</th><th>Period</th><th>Phase</th><th>Result</th></tr></thead><tbody id="rows"></tbody></table><br><button class="btn" onclick="addRow()">ADD READING</button><button class="btn reset" onclick="rows.innerHTML=''">CLEAR</button></div></section>
+<section id="simulation" class="page"><div class="card"><h2>Virtual CRO Experiment</h2>
+<div class="cro"><div class="scope"><canvas id="scope" width="900" height="430"></canvas><p id="status" style="color:#fff">CRO STOPPED</p></div>
+<div class="panel"><h3>CRO FRONT PANEL</h3><div class="knobs"><div class="knob">CH1 VOLTS/DIV<div class="dial"></div></div><div class="knob">CH2 VOLTS/DIV<div class="dial"></div></div><div class="knob">TIME/DIV<div class="dial"></div></div><div class="knob">TRIGGER<div class="dial"></div></div></div><br>
+<button class="action" onclick="toggleRun()">RUN / STOP</button> <button class="action" onclick="resetLab()">RESET</button><hr>
+<div class="controls"><div class="control"><label>CH1</label><select id="ch1"><option>ON</option><option>OFF</option></select></div>
+<div class="control"><label>CH2</label><select id="ch2"><option>ON</option><option>OFF</option></select></div>
+<div class="control"><label>CH1 Coupling</label><select id="c1"><option>DC</option><option>AC</option><option>GND</option></select></div>
+<div class="control"><label>CH2 Coupling</label><select id="c2"><option>DC</option><option>AC</option><option>GND</option></select></div>
+<div class="control"><label>CH1 VOLTS/DIV</label><select id="v1"><option>0.5</option><option selected>1</option><option>2</option><option>5</option></select></div>
+<div class="control"><label>CH2 VOLTS/DIV</label><select id="v2"><option>0.5</option><option selected>1</option><option>2</option><option>5</option></select></div>
+<div class="control"><label>TIME/DIV (ms)</label><select id="td"><option>0.2</option><option>0.5</option><option selected>1</option><option>2</option><option>5</option></select></div>
+<div class="control"><label>Trigger Mode</label><select id="tm"><option>AUTO</option><option>NORMAL</option><option>SINGLE</option></select></div></div></div></div></div>
 
-<section id="assess" class="tab"><div class="card"><h2>Assessment</h2>
-<div class="quiz"><b>1. VOLTS/DIV controls:</b><br><label><input type="radio" name="q1" value="1"> Vertical sensitivity</label><br><label><input type="radio" name="q1" value="0"> Time scale</label></div>
-<div class="quiz"><b>2. If Vp = 2 V, Vpp is:</b><br><label><input type="radio" name="q2" value="1"> 4 V</label><br><label><input type="radio" name="q2" value="0"> 2 V</label></div>
-<div class="quiz"><b>3. If T = 1 ms, f is:</b><br><label><input type="radio" name="q3" value="1"> 1 kHz</label><br><label><input type="radio" name="q3" value="0"> 100 Hz</label></div>
-<div class="quiz"><b>4. Equal amplitudes and 90° phase produce:</b><br><label><input type="radio" name="q4" value="1"> Circle</label><br><label><input type="radio" name="q4" value="0"> Straight line</label></div>
-<div class="quiz"><b>5. Phase formula is:</b><br><label><input type="radio" name="q5" value="1"> Δt/T × 360°</label><br><label><input type="radio" name="q5" value="0"> T/Δt</label></div>
-<button class="btn" onclick="grade()">SUBMIT ASSESSMENT</button><div id="score" class="result"></div></div></section>
-</main>
+<div class="card"><h3>Function Generator</h3><div class="controls">
+<div class="control"><label>CH1 amplitude (V peak)</label><input id="a1" type="range" min=".5" max="5" step=".1" value="2"><span id="a1o">2.0</span> V</div>
+<div class="control"><label>Frequency (Hz)</label><input id="fq" type="range" min="200" max="2000" step="100" value="1000"><span id="fqo">1000</span></div>
+<div class="control"><label>CH2 amplitude (V peak)</label><input id="a2" type="range" min=".5" max="5" step=".1" value="2"><span id="a2o">2.0</span> V</div>
+<div class="control"><label>CH2 phase (°)</label><input id="ph" type="range" min="-180" max="180" step="5" value="30"><span id="pho">30</span>°</div></div></div>
+
+<div class="card"><h3>Virtual Probes</h3><div class="grid"><div class="probe"><b>CH1 Probe</b><br><button class="action" onclick="connect(1)">Connect to Generator</button> <span id="p1">Not connected</span></div><div class="probe"><b>CH2 Probe</b><br><button class="action" onclick="connect(2)">Connect to Generator</button> <span id="p2">Not connected</span></div></div></div>
+
+<div class="card"><h3>Reference Check</h3><p>These values are available after operating the instrument and are intended for checking calculations.</p>
+<p>CH1 Vpp: <b id="rvpp">-</b> V | Period: <b id="rT">-</b> ms | Frequency: <b id="rf">-</b> Hz | Phase: <b id="rph">-</b>°</p></div></section>
+
+<section id="xy" class="page"><div class="card"><h2>X-Y / Lissajous Mode</h2><p>Set equal frequencies and observe the phase-dependent ellipse.</p><canvas id="xycanvas" width="800" height="500" style="width:100%;background:#07100b;border:4px solid #333"></canvas>
+<div class="controls"><div class="control"><label>Frequency ratio</label><select id="ratio"><option value="1">1:1</option><option value="2">2:1</option><option value=".5">1:2</option></select></div><div class="control"><label>Phase</label><input id="xyph" type="range" min="-90" max="90" value="30"><span id="xypho">30</span>°</div></div></div></section>
+
+<section id="observation" class="page"><div class="card"><h2>Observation & Calculation</h2><table><tr><th>Quantity</th><th>Student value</th><th>Unit</th><th>Tolerance</th></tr>
+<tr><td>CH1 Vpp</td><td><input id="svpp" type="number" step=".01"></td><td>V</td><td>±0.25</td></tr>
+<tr><td>Time period</td><td><input id="st" type="number" step=".01"></td><td>ms</td><td>±0.20</td></tr>
+<tr><td>Frequency</td><td><input id="sf" type="number"></td><td>Hz</td><td>±50</td></tr>
+<tr><td>Phase difference</td><td><input id="sp" type="number" step=".1"></td><td>degree</td><td>±5</td></tr></table><br>
+<button class="action" onclick="checkObs()">Submit Observation</button><div id="obs" class="result" style="display:none"></div></div>
+<div class="card"><h3>Formulae</h3><p>Vpp = vertical divisions × VOLTS/DIV</p><p>T = horizontal divisions × TIME/DIV</p><p>f = 1/T</p><p>φ = (Δt/T) × 360°</p></div></section>
+
+<section id="assessment" class="page"><div class="card"><h2>Assessment</h2>
+<p>1. Four vertical divisions at 1 V/div gives Vpp = <label><input type="radio" name="q1" value="4">4 V</label> <label><input type="radio" name="q1" value="2">2 V</label></p>
+<p>2. A 2 ms period corresponds to <label><input type="radio" name="q2" value="500">500 Hz</label> <label><input type="radio" name="q2" value="2000">2000 Hz</label></p>
+<p>3. Δt/T = 0.25 gives <label><input type="radio" name="q3" value="90">90°</label> <label><input type="radio" name="q3" value="45">45°</label></p>
+<p>4. X-Y mode is useful for <label><input type="radio" name="q4" value="phase">phase measurement</label> <label><input type="radio" name="q4" value="temp">temperature</label></p>
+<p>5. AC coupling blocks the <label><input type="radio" name="q5" value="dc">DC component</label> <label><input type="radio" name="q5" value="ac">AC component</label></p>
+<button class="action" onclick="grade()">Submit Assessment</button><div id="score" class="result" style="display:none"></div></div></section>
+
+<section id="result" class="page"><div class="card"><h2>Result</h2><div id="final" class="result">Complete Observation and Assessment.</div></div><div class="card"><h3>References</h3><p>Standard Electronics Engineering CRO laboratory manuals and oscilloscope measurement principles.</p></div></section>
+</main><footer style="text-align:center;padding:20px;color:#687386">Educational Virtual Lab prototype | GitHub Pages compatible</footer>
 <script>
-const $=id=>document.getElementById(id),c=$("scope"),ctx=c.getContext("2d"),xyc=$("xy"),xctx=xyc.getContext("2d");let run=true,ch1=true,ch2=true,rowsCount=0;
-function show(id,b){document.querySelectorAll(".tab").forEach(e=>e.classList.remove("active"));document.querySelectorAll(".tb").forEach(e=>e.classList.remove("active"));$(id).classList.add("active");b.classList.add("active");draw();drawXY()}
-function Q(){return{v1:+$("v1").value,v2:+$("v2").value,t:+$("time").value,a1:+$("a1").value,a2:+$("a2").value,f:+$("freq").value,p:+$("phase").value,tr:+$("trigger").value}}
-function draw(){let z=Q(),W=c.width,H=c.height;ctx.fillStyle="#06140f";ctx.fillRect(0,0,W,H);ctx.strokeStyle="#164e38";ctx.lineWidth=1;
-for(let i=0;i<=20;i++){ctx.beginPath();ctx.moveTo(i*W/20,0);ctx.lineTo(i*W/20,H);ctx.stroke()}for(let i=0;i<=12;i++){ctx.beginPath();ctx.moveTo(0,i*H/12);ctx.lineTo(W,i*H/12);ctx.stroke()}ctx.strokeStyle="#5e8e72";ctx.beginPath();ctx.moveTo(0,H/2);ctx.lineTo(W,H/2);ctx.stroke();
-let cyc=z.f*z.t*10/1000;if(cyc<.2)cyc=.2;function wave(A,V,off,ph,col,dash,show){if(!show)return;ctx.strokeStyle=col;ctx.lineWidth=3;ctx.setLineDash(dash?[10,7]:[]);ctx.beginPath();for(let i=0;i<W;i++){let y=off-A/V*42*Math.sin(2*Math.PI*cyc*i/W+ph);i?ctx.lineTo(i,y):ctx.moveTo(i,y)}ctx.stroke();ctx.setLineDash([])}
-wave(z.a1,z.v1,H*.34,0,"#54e8ff",false,ch1&&$("c1").value!=="GND");wave(z.a2,z.v2,H*.66,z.p*Math.PI/180,"#ffd35a",true,ch2&&$("c2").value!=="GND");
-let T=1000/z.f,dt=Math.abs(z.p)/360*T; $("v1txt").textContent=z.v1+" V/div";$("v2txt").textContent=z.v2+" V/div";$("ttxt").textContent=z.t.toFixed(2)+" ms/div";$("trtxt").textContent=z.tr.toFixed(1)+" V";$("a1txt").textContent=z.a1.toFixed(1)+" Vp";$("a2txt").textContent=z.a2.toFixed(1)+" Vp";$("ftxt").textContent=z.f+" Hz";$("ptxt").textContent=z.p+"°";
-$("mv1").textContent=z.a1.toFixed(2)+" V";$("mpp").textContent=(2*z.a1).toFixed(2)+" V";$("mt").textContent=T.toFixed(3)+" ms";$("mf").textContent=z.f>=1000?(z.f/1000).toFixed(2)+" kHz":z.f+" Hz";$("mp").textContent=z.p+"°";$("d1").textContent=z.a1.toFixed(2)+"Vp";$("d2").textContent=z.a2.toFixed(2)+"Vp";$("df").textContent=z.f+"Hz";$("dp").textContent=z.p+"°";
-$("k1").style.setProperty("--rot",(-135+(z.v1-.5)/4.5*270)+"deg");$("k2").style.setProperty("--rot",(-135+(z.v2-.5)/4.5*270)+"deg");$("kt").style.setProperty("--rot",(-135+(z.t-.05)/.95*270)+"deg");$("ktr").style.setProperty("--rot",(-135+(z.tr+2)/4*270)+"deg");
-let ca=+$("ca").value,cb=+$("cb").value,d=Math.abs(cb-ca);$("cread").textContent="Δt = "+d.toFixed(3)+" ms | φ = "+(d/T*360).toFixed(1)+"°"} 
-function drawXY(){let p=+$("xphase").value*Math.PI/180,r=+$("xratio").value,W=xyc.width,H=xyc.height;xctx.fillStyle="#06140f";xctx.fillRect(0,0,W,H);xctx.strokeStyle="#164e38";for(let i=0;i<=16;i++){xctx.beginPath();xctx.moveTo(i*W/16,0);xctx.lineTo(i*W/16,H);xctx.stroke()}for(let i=0;i<=10;i++){xctx.beginPath();xctx.moveTo(0,i*H/10);xctx.lineTo(W,i*H/10);xctx.stroke()}xctx.strokeStyle="#5e8e72";xctx.beginPath();xctx.moveTo(W/2,0);xctx.lineTo(W/2,H);xctx.moveTo(0,H/2);xctx.lineTo(W,H/2);xctx.stroke();xctx.strokeStyle="#66ff9a";xctx.lineWidth=3;xctx.beginPath();for(let i=0;i<1200;i++){let a=i/1199*Math.PI*2,X=W/2+W*.38*Math.sin(a),Y=H/2-H*.38*r*Math.sin(a+p);i?xctx.lineTo(X,Y):xctx.moveTo(X,Y)}xctx.stroke();$("xf").textContent=$("xfreq").value+" Hz";$("xp").textContent=$("xphase").value+"°";$("xr").textContent=r.toFixed(1)}
-function toggleCh(n){if(n===1){ch1=!ch1;$("ch1btn").textContent=ch1?"CH1 ON":"CH1 OFF";$("ch1btn").className=ch1?"btn on":"btn stop"}else{ch2=!ch2;$("ch2btn").textContent=ch2?"CH2 ON":"CH2 OFF";$("ch2btn").className=ch2?"btn on":"btn stop"}draw()}
-function xy(){document.querySelectorAll(".tab").forEach(e=>e.classList.remove("active"));$("xyTab").classList.add("active");drawXY()}
-function resetLab(){["v1","v2","time","a1","a2","freq","phase","trigger"].forEach((id,i)=>$(id).value=[1,1,.2,2,2,1000,45,0][i]);$("c1").value="DC";$("c2").value="DC";ch1=ch2=true;$("ch1btn").textContent="CH1 ON";$("ch2btn").textContent="CH2 ON";draw()}
-function addRow(){rowsCount++;let z=Q(),T=1000/z.f,r=$("rows").insertRow();[rowsCount,z.a1.toFixed(2),(2*z.a1).toFixed(2),z.f,T.toFixed(3)+" ms",z.p+"°","Verified"].forEach(v=>{let d=r.insertCell();d.textContent=v})}
-function grade(){let s=0;for(let i=1;i<=5;i++){let a=document.querySelector('input[name=q'+i+']:checked');if(a)s+=+a.value}$("score").textContent="Score: "+s+"/5"+(s===5?" - Excellent!":s>=3?" - Good attempt.":" - Review the experiment theory.")}
-["v1","v2","time","a1","a2","freq","phase","trigger","c1","c2","ca","cb"].forEach(id=>$(id).oninput=draw);["xfreq","xphase","xratio"].forEach(id=>$(id).oninput=drawXY);function loop(){if(run)draw();requestAnimationFrame(loop)}draw();drawXY();loop();
-</script>
-</body></html>
+const pages=['home','theory','procedure','simulation','xy','observation','assessment','result'],titles=['Home','Theory','Procedure','Experiment','Lissajous','Observation','Assessment','Result'];
+const nav=document.getElementById('nav');pages.forEach((p,i)=>{let b=document.createElement('button');b.textContent=titles[i];b.onclick=()=>go(p);b.id='n'+p;nav.appendChild(b)});
+function go(p){pages.forEach(x=>document.getElementById(x).classList.toggle('active',x===p));document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));document.getElementById('n'+p).classList.add('active');if(p==='simulation')drawScope();if(p==='xy')drawXY()}
+let run=false,conn=[false,false];
+function connect(n){conn[n-1]=true;document.getElementById('p'+n).textContent='Connected ✓';document.getElementById('p'+n).className='success';drawScope()}
+function toggleRun(){run=!run;document.getElementById('status').textContent=run?'CRO RUNNING':'CRO STOPPED';drawScope()}
+function resetLab(){run=false;conn=[false,false];document.getElementById('p1').textContent='Not connected';document.getElementById('p2').textContent='Not connected';document.getElementById('status').textContent='CRO STOPPED';drawScope()}
+function v(id){return parseFloat(document.getElementById(id).value)}
+function grid(c,w,h){c.strokeStyle='#17351d';for(let x=0;x<=w;x+=w/10){c.beginPath();c.moveTo(x,0);c.lineTo(x,h);c.stroke()}for(let y=0;y<=h;y+=h/8){c.beginPath();c.moveTo(0,y);c.lineTo(w,y);c.stroke()}c.strokeStyle='#315b36';c.lineWidth=2;c.beginPath();c.moveTo(w/2,0);c.lineTo(w/2,h);c.stroke();c.beginPath();c.moveTo(0,h/2);c.lineTo(w,h/2);c.stroke()}
+function drawScope(){let c=document.getElementById('scope').getContext('2d'),w=900,h=430;c.clearRect(0,0,w,h);grid(c,w,h);let f=v('fq'),a1=v('a1'),a2=v('a2'),ph=v('ph')*Math.PI/180,td=v('td'),v1=v('v1'),v2=v('v2');if(!run)return;c.lineWidth=2;
+if(document.getElementById('ch1').value==='ON'&&conn[0]&&document.getElementById('c1').value!=='GND'){c.strokeStyle='#5cff7a';c.beginPath();for(let x=0;x<w;x++){let t=(x-w/2)*td/10,y=h/2-(a1/v1*35)*Math.sin(2*Math.PI*f*t/1000);x?c.lineTo(x,y):c.moveTo(x,y)}c.stroke()}
+if(document.getElementById('ch2').value==='ON'&&conn[1]&&document.getElementById('c2').value!=='GND'){c.strokeStyle='#62a8ff';c.beginPath();for(let x=0;x<w;x++){let t=(x-w/2)*td/10,y=h/2-(a2/v2*35)*Math.sin(2*Math.PI*f*t/1000+ph);x?c.lineTo(x,y):c.moveTo(x,y)}c.stroke()}}
+function drawXY(){let c=document.getElementById('xycanvas').getContext('2d'),w=800,h=500;c.clearRect(0,0,w,h);grid(c,w,h);let p=v('xyph')*Math.PI/180,r=v('ratio');c.strokeStyle='#65ff7a';c.lineWidth=2;c.beginPath();for(let i=0;i<1500;i++){let t=i/1500*40*Math.PI,x=w/2+260*Math.sin(t),y=h/2-180*Math.sin(r*t+p);i?c.lineTo(x,y):c.moveTo(x,y)}c.stroke();document.getElementById('xypho').textContent=v('xyph')}
+function refs(){document.getElementById('rvpp').textContent=(2*v('a1')).toFixed(2);document.getElementById('rT').textContent=(1000/v('fq')).toFixed(2);document.getElementById('rf').textContent=v('fq');document.getElementById('rph').textContent=v('ph')}
+function checkObs(){refs();let a=[['svpp',2*v('a1'),.25],['st',1000/v('fq'),.2],['sf',v('fq'),50],['sp',v('ph'),5]],n=0;a.forEach(q=>{let z=parseFloat(document.getElementById(q[0]).value);if(!isNaN(z)&&Math.abs(z-q[1])<=q[2])n++});let d=document.getElementById('obs');d.style.display='block';d.innerHTML=n===4?'<span class="success">Observation accepted: 4/4 correct.</span>':n+'/4 within tolerance. Review your readings and calculations.'}
+function grade(){let ans={q1:'4',q2:'500',q3:'90',q4:'phase',q5:'dc'},n=0;Object.keys(ans).forEach(q=>{let x=document.querySelector('input[name='+q+']:checked');if(x&&x.value===ans[q])n++});let d=document.getElementById('score');d.style.display='block';d.innerHTML='<b>Score: '+n+'/5</b> — '+(n>=3?'<span class="success">PASS</span>':'<span class="error">Review and retry.</span>');document.getElementById('final').innerHTML=n>=3?'<span class="success">Experiment completed and assessment passed.</span>':'Assessment pass mark not reached.'}
+['a1','a2','fq','ph','td','v1','v2','ch1','ch2','c1','c2'].forEach(id=>document.getElementById(id).addEventListener('input',()=>{let o=id+'o';if(document.getElementById(o))document.getElementById(o).textContent=document.getElementById(id).value;drawScope()}));
+document.getElementById('xyph').addEventListener('input',drawXY);document.getElementById('ratio').addEventListener('input',drawXY);go('home');drawScope();drawXY();
+</script></body></html>
